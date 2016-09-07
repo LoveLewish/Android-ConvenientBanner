@@ -14,38 +14,46 @@ public class CBLoopViewPager extends ViewPager {
     OnPageChangeListener mOuterPageChangeListener;
     private OnItemClickListener onItemClickListener;
     private CBPageAdapter mAdapter;
-
+    /**
+     * 是否可滑动
+     */
     private boolean isCanScroll = true;
+    /**
+     * 是否循环
+     */
     private boolean canLoop = true;
+
+    public CBLoopViewPager(Context context) {
+        super(context);
+        init();
+    }
+
+    public CBLoopViewPager(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    /**
+     * 初始化（设置ViewPager页面监听）
+     */
+    private void init() {
+        super.setOnPageChangeListener(onPageChangeListener);
+    }
 
     public void setAdapter(PagerAdapter adapter, boolean canLoop) {
         mAdapter = (CBPageAdapter) adapter;
         mAdapter.setCanLoop(canLoop);
         mAdapter.setViewPager(this);
         super.setAdapter(mAdapter);
-
         setCurrentItem(getFristItem(), false);
     }
 
-    public int getFristItem() {
-        return canLoop ? mAdapter.getRealCount() : 0;
-    }
-
-    public int getLastItem() {
-        return mAdapter.getRealCount() - 1;
-    }
-
-    public boolean isCanScroll() {
-        return isCanScroll;
-    }
-
-    public void setCanScroll(boolean isCanScroll) {
-        this.isCanScroll = isCanScroll;
+    public CBPageAdapter getAdapter() {
+        return mAdapter;
     }
 
     private float oldX = 0, newX = 0;
     private static final float sens = 5;
-
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (isCanScroll) {
@@ -78,34 +86,14 @@ public class CBLoopViewPager extends ViewPager {
             return false;
     }
 
-    public CBPageAdapter getAdapter() {
-        return mAdapter;
-    }
-
-    public int getRealItem() {
-        return mAdapter != null ? mAdapter.toRealPosition(super.getCurrentItem()) : 0;
-    }
-
     @Override
     public void setOnPageChangeListener(OnPageChangeListener listener) {
         mOuterPageChangeListener = listener;
     }
 
-
-    public CBLoopViewPager(Context context) {
-        super(context);
-        init();
-    }
-
-    public CBLoopViewPager(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    private void init() {
-        super.setOnPageChangeListener(onPageChangeListener);
-    }
-
+    /**
+     * ViewPager页面变化监听器类
+     */
     private OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
         private float mPreviousPosition = -1;
 
@@ -126,14 +114,14 @@ public class CBLoopViewPager extends ViewPager {
             int realPosition = position;
 
             if (mOuterPageChangeListener != null) {
-                if (realPosition != mAdapter.getRealCount() - 1) {
+                if (realPosition != mAdapter.getRealCount() - 1) {//不是最后一个
                     mOuterPageChangeListener.onPageScrolled(realPosition,
                             positionOffset, positionOffsetPixels);
-                } else {
-                    if (positionOffset > .5) {
+                } else {//是最后一个
+                    if (positionOffset > .5) {//最后一个向右滑过一半了，回到第一个
                         mOuterPageChangeListener.onPageScrolled(0, 0, 0);
                     } else {
-                        mOuterPageChangeListener.onPageScrolled(realPosition,
+                        mOuterPageChangeListener.onPageScrolled(realPosition,//向左滑过一半了，回到前一个
                                 0, 0);
                     }
                 }
@@ -148,6 +136,25 @@ public class CBLoopViewPager extends ViewPager {
         }
     };
 
+    public int getFristItem() {
+        return canLoop ? mAdapter.getRealCount() : 0;
+    }
+
+    public int getLastItem() {
+        return mAdapter.getRealCount() - 1;
+    }
+
+    public int getRealItem() {
+        return mAdapter != null ? mAdapter.toRealPosition(super.getCurrentItem()) : 0;
+    }
+
+    public boolean isCanScroll() {
+        return isCanScroll;
+    }
+
+    public void setCanScroll(boolean isCanScroll) {
+        this.isCanScroll = isCanScroll;
+    }
     public boolean isCanLoop() {
         return canLoop;
     }

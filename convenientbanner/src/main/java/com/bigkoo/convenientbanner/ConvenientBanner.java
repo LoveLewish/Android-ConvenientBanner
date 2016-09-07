@@ -31,9 +31,9 @@ import java.util.List;
  * @author Sai 支持自动翻页
  */
 public class ConvenientBanner<T> extends LinearLayout {
-    private List<T> mDatas;
+    private List<T> mDatas;//数据集合
     private int[] page_indicatorId;
-    private ArrayList<ImageView> mPointViews = new ArrayList<ImageView>();
+    private ArrayList<ImageView> mPointViews = new ArrayList<ImageView>();//小点图片集合
     private CBPageChangeListener pageChangeListener;
     private ViewPager.OnPageChangeListener onPageChangeListener;
     private CBPageAdapter pageAdapter;

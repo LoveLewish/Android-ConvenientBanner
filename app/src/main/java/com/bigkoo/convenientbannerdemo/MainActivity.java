@@ -154,7 +154,6 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
 
     /**
      * 通过文件名获取资源id 例子：getResId("icon", R.drawable.class);
-     *
      * @param variableName
      * @param c
      * @return

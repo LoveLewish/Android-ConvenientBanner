@@ -22,6 +22,11 @@ public class CBPageAdapter<T> extends PagerAdapter {
     private CBLoopViewPager viewPager;
     private final int MULTIPLE_COUNT = 300;
 
+    /**
+     * 该显示的内容在集合中的位置
+     * @param position
+     * @return
+     */
     public int toRealPosition(int position) {
         int realCount = getRealCount();
         if (realCount == 0)
@@ -35,8 +40,9 @@ public class CBPageAdapter<T> extends PagerAdapter {
         return canLoop ? getRealCount()*MULTIPLE_COUNT : getRealCount();
     }
 
-    public int getRealCount() {
-        return mDatas == null ? 0 : mDatas.size();
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return view == object;
     }
 
     @Override
@@ -68,9 +74,12 @@ public class CBPageAdapter<T> extends PagerAdapter {
         }catch (IllegalStateException e){}
     }
 
-    @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return view == object;
+    /**
+     * 得到集合中数据数量
+     * @return
+     */
+    public int getRealCount() {
+        return mDatas == null ? 0 : mDatas.size();
     }
 
     public void setCanLoop(boolean canLoop) {
